@@ -9,4 +9,5 @@ dependencies = [
     "django-crispy-forms==2.1",
     "gunicorn>=25.1.0",
     "pillow>=12.1.1",
+    "whitenoise>=6.12.0",
 ]
