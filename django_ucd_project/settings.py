@@ -15,8 +15,6 @@ from pathlib import Path
 
 import dj_database_url # Added for deployment
 
-from dotenv import load_dotenv # Added to automatically load local .env
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
