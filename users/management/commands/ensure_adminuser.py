@@ -1,4 +1,5 @@
 import os
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
@@ -17,6 +18,5 @@ class Command(BaseCommand):
         password = os.environ["DJANGO_SUPERUSER_PASSWORD"]
 
         if not User.objects.filter(username=username).exists():
-            User.objects.create_superuser(username=username, email=email, password=password)
+            User.objects.create_superuser(username=username, email=email, password=password)  # type: ignore
             self.stdout.write(self.style.SUCCESS(f"The superuser '{username}' was created successfully"))
-            

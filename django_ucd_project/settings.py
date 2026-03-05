@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url
+
+import dj_database_url # Added for deployment
+
+from dotenv import load_dotenv # Added to automatically load local .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,11 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY'] # Stored as an environment variable
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == 'TRUE'
+DEBUG = os.environ.get('DEBUG') == 'TRUE' # Only the literal value 'TRUE' will set DEBUG to True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.getenv('RENDER_EXTERNAL_HOSTNAME', '')]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('RENDER_HOSTNAME', '')] # Added the render hostname to the allowed hosts
 
 
 # Application definition
@@ -36,14 +39,16 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.getenv('RENDER_EXTERNAL_HOSTNAME',
 INSTALLED_APPS = [
     "blog.apps.BlogConfig",
     "users.apps.UsersConfig",
-    "crispy_forms", #Updated here
-    "crispy_bootstrap5", #Updated here
+    "crispy_forms",
+    "crispy_bootstrap5",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 MIDDLEWARE = [
@@ -80,11 +85,9 @@ WSGI_APPLICATION = "django_ucd_project.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
 if DEBUG: # Allow a fallback to sqlite
     DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
-else: # Require a DATABASE_URL env var (from the Render.com database instance).
+else: # Require a DATABASE_URL env var (the Render.com database).
     DATABASE_URL = os.environ["DATABASE_URL"]  # Will raise KeyError if missing
 
 DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
@@ -123,9 +126,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  # Added for deployment
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Static files will be collected here by 'python manage.py collectstatic'
+STATIC_URL = "static/"  # Static files will be served from this URL
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -143,3 +146,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER'] # Login email address, Stored as an environment variable
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD'] # App Password set from gmail, Stored as an environment variable
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ['CLOUDINARY_CLOUD_NAME'],
+    'API_KEY': os.environ['CLOUDINARY_API_KEY'],
+    'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
+}

@@ -51,7 +51,8 @@ urlpatterns = [
          name='password_reset_complete'),
 ]
 
+# With whitenoise, we can now serve static files from our application
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-if settings.DEBUG:
+if settings.DEBUG: # The media files are only served in debug mode, as we only have an ephemeral file system on Render
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
