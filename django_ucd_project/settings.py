@@ -124,9 +124,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  # Added for deployment
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Static files will be collected here by 'python manage.py collectstatic'
-STATIC_URL = "static/"  # Static files will be served from this URL
+STATIC_URL = "static/"
+STATICFILES_STORAGE = "whitenoise.storage.ManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
